@@ -1,0 +1,175 @@
+*	{
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-image: url(mainBg.gif);
+	background-repeat: repeat;
+	background-color: #F5F5F5;
+	font: 14px Arial, Helvetica, sans-serif;
+}
+
+div#header {
+	padding-top: 28px;
+	width:950px;
+	margin:auto;
+}
+
+div#header h1 {
+	font-family: times-new-roman, serif;
+}
+
+div#enlogo {
+	float:left;
+	width:150px;
+}
+div#enheadtitle {
+	float:left;
+	width:800px;
+	text-align:left;
+	direction:rtl;
+}
+
+div#helogo {
+	float:right;
+	width:150px;
+	text-align:right;
+}
+div#heheadtitle {
+	float:right;
+	width:800px;
+	text-align:right;
+	direction:rtl;
+}
+
+.enmenubar {
+	background-color:#0000FF;
+	width:950px;
+	height:40px;
+	margin:auto;
+	margin-bottom:2px;
+	padding-bottom:0px;
+	clear:both;
+	position:relative;
+	direction:ltr;
+	text-align:left;
+	border:1px solid white;
+}
+
+.enmenubar ul li {
+	list-style:none;
+	display:inline;
+}
+
+.enmenubar li {
+	background-image:url('tab.png');
+	width:110px;
+	margin-left:5px;
+	margin-right:5px;
+	text-align:center;
+	float:left;
+}
+	
+.hemenubar {
+	background-color:#0000FF;
+	width:950px;
+	height:40px;
+	margin:auto;
+	margin-bottom:2px;
+	padding-bottom:0px;
+	clear:both;
+	position:relative;
+	direction:rtl;
+	text-align:right;
+	border:1px solid white;
+}
+
+.hemenubar ul li {
+	list-style:none;
+	display:inline;
+}
+
+.hemenubar li {
+	background-image:url('tab.png');
+	width:110px;
+	margin-left:5px;
+	margin-right:5px;
+	text-align:center;
+	float:right;
+}
+
+.hemenubar li a {
+	color:black;
+}
+
+.enmenubar li a {
+	color:black;
+}
+
+.hemenubar a {
+	color:white;
+}
+
+.enmenubar a {
+	color: white;
+}
+
+.hepath {
+	color:white;
+	font-weight:bold;
+	margin:2px;
+}
+
+.hepath a {
+	color:white;
+}
+
+.tab {
+	background-image:url('tab.png');
+	width:110px;
+	margin-top:15px;
+	margin-left:3px;
+	margin-right:3px;
+	display:inline;
+/*	float:left; */
+	text-align:center;
+}
+
+.hetab {
+	background-image:url('tab.png');
+	width:110px;
+	margin-top:15px;
+	margin-left:3px;
+	margin-right:3px;
+	float:right;
+	text-align:center;
+	direction:rtl;
+}
+
+.contents {
+	border-radius:5px;
+	-mos-border-radius:5px;
+	-webkit-border-radius:5px;
+	background-color:#FFFFFF;
+	margin:auto;
+	border: 1px solid #D0D0D0;
+	background-color: #ffffff;
+	position: relative;
+	width: 950px;
+	min-height: 480px; 
+	_height: 480px;
+	clear:both;
+}
+
+.alttbl tr:nth-child(odd)		{ background-color:#e0e0e0; }
+.alttbl tr:nth-child(even)		{ background-color:#ffffff; }
+.alttbl th { background-color:white };
+
+.formtbl td {
+	margin-top:5px;
+}
+
+.formtbl tr {
+	margin-top:5px;
+}

@@ -1,0 +1,82 @@
+/* Styles for yawiki system */
+
+body {
+	background-color: #FFFFFF;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.para {display:none;
+	padding:10px;
+	border:1px solid #FF0000;
+	-moz-border-radius: 12px;
+}
+
+#cmds {
+	display:none;
+	border:1px solid;
+	-moz-border-radius:10px;
+}
+
+.cmdtbl {
+	display:table-row;
+}
+
+.cmditem {
+	background:#F3F8FF;
+	border:0px solid;
+	display:table-cell;
+	padding-left:4px;
+	padding-right:4px;
+	-moz-border-radius: 10px;
+}
+
+.cmditem A {text-decoration:none}
+
+.cmdspace {
+	display:table-cell;
+	padding-left:4px;
+	padding-right:4px;
+}
+
+.white_content {
+	display: block;
+	position: absolute;
+	top: 50px;
+	left: 15%;
+	width: 70%;
+	height: 400px;
+	/*padding: 16px; */
+	/* border: 16px solid #7C7778; */
+	background-color: white;
+	border:1px solid blue;
+	z-index:1002;
+	overflow: auto;
+}
+
+div.white_content .title {
+	background-image: url(images/titleTileBg.gif);
+	background-repeat: repeat-x;
+	background-position: center left;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0;
+	height: 36px;
+	line-height: 36px;
+}
+
+h1 {font-size:24px; font-weight:bold; font-family: arial, sans-serif; color: navy;}
+h2 {font-size:18px; font-weight:bold; font-family: arial, sans-serif; color: navy}
+h3 {font-size:18px; font-weight:bold; font-family: arial, sans-serif; color: navy}
+h4 {font-size:16px; font-family: arial, sans-serif; color:navy}
+a:visited {color:navy;text-decoration:none; }
+a:link {color:navy; font-family:arial, sans-serif; text-decoration:none}
+a:hover {color:blue;}
+.text1 { font-size:12px; font-family: arial, sans-serif}
+.text2 { font-size:14px; font-family: arial, sans-serif}
+.text3 { font-size:18px; font-family: arial, sans-serif;}
+.ctext { font-size:14px; font-family: courier; direction:ltr; text-align:left; background:#E8E8E8}
+.lighttext { font-size: 12px; font-family: arial, sans-serif; color:gray }
+table {font-size:14px; font-family: arial, sans-serif}
+td.item {background:url(button.gif); width:146px; text-align: center; height:48px; font-size:16px ;font-family:arial, sans-serif;color:white }

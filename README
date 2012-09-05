@@ -1,0 +1,10 @@
+Simple OPDS acquisition feed editor.
+
+This is a PHP script to edit a simple OPDS acquisition feed.
+
+Written by: Ori Idan <ori@heliconbooks.com>
+
+The OPDS file to read can be a URL.
+The output OPDS file is constructed using the file name part of the input file and a constant prefix.
+
+
