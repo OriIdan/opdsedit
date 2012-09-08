@@ -25,7 +25,25 @@ function GetMimeType($t) {
 		return "image/png";
 }
 
-function PrintAcquisitionTypeSelect($acq) {
+$jscript = <<<EOS
+<script type="text/javascript">
+function acqchange(n, e) {
+	var prdiv = "pr" + n + e;
+	var asel = "a" + n + e;
+	
+	var val = document.getElementById(asel).value;
+	document.getElementById(prdiv).style.display = 'none';
+	if(val.indexOf('buy') >= 0)
+		document.getElementById(prdiv).style.display = 'block';
+	if(val.indexOf('subscribe') >= 0)
+		document.getElementById(prdiv).style.display = 'block';
+	if(val.indexOf('sample') >= 0)
+		document.getElementById(prdiv).style.display = 'block';
+}
+</script>
+EOS;
+
+function PrintAcquisitionTypeSelect($acq, $n, $e) {
 	$acqtypearr = array('http://opds-spec.org/acquisition' => 'General acquisition',
 						'http://opds-spec.org/acquisition/open-access' => 'Open access',
 						'http://opds-spec.org/acquisition/buy' => 'Sale',
@@ -33,9 +51,22 @@ function PrintAcquisitionTypeSelect($acq) {
 						'http://opds-spec.org/acquisition/subscribe' => 'Subscription',
 						'http://opds-spec.org/acquisition/sample' => 'Sampling');
 
-	print "<select name=\"acqtype[]\" class=\"input-medium\">\n";
+	print "<select name=\"acqtype${n}[]\" id=\"a$n$e\" class=\"input-medium\" style=\"height:1.5em;padding:0px\" onChange=\"acqchange($n, $e)\">\n";
 	foreach($acqtypearr as $k => $v) {
 		$s = ($k == $acq) ? "selected" : '';
+		print "<option value=\"$k\" $s>$v</option>\n";
+	}
+	print "</select>\n";
+}
+
+function PrintMimeSelect($mime, $n) {
+	$mimetypearr = array('application/epub+zip' => 'ePUB digital book',
+							'video/mp4' => 'MP4 video',
+							'audio/mpeg' => 'MP3 audio');
+	
+	print "<select name=\"mime${n}[]\" class=\"input-medium\" style=\"height:1.5em;padding:0\">\n";
+	foreach($mimetypearr as $k => $v) {
+		$s = ($k == $mime) ? "selected" : '';
 		print "<option value=\"$k\" $s>$v</option>\n";
 	}
 	print "</select>\n";
@@ -50,6 +81,7 @@ if(!$id) {	/* We are standalone so emit header.html */
 	while(($line = fgets($fd)) !== false) {
 		print $line;
 	}
+	print $jscript;
 	fclose($fd);
 }
 
@@ -100,10 +132,11 @@ if($action == 'opdssubmit') {
 		$lang = $_POST['entrylang'];
 		$summary = $_POST['summary'];
 		$entryimg = $_POST['entryimg'];
-		$acquisition = $_POST['acquisition'];
-		$acqtype = $_POST['acqtype'];
-		$price = $_POST['price'];
-		$curcode = $_POST['curcode'];
+		$acquisition = $_POST['acquisition1'];
+		$acqtype = $_POST['acqtype1'];
+		$price = $_POST['price1'];
+		$curcode = $_POST['curcode1'];
+		$mime = $_POST['mime1'];
 		$i = 0;
 		foreach($entryid as $id) {
 			fwrite($out, "<entry>\n");
@@ -123,11 +156,16 @@ if($action == 'opdssubmit') {
 			fwrite($out, "<link rel=\"http://opds-spec.org/image\" href=\"$t\" type=\"$mimetype\" />\n");
 			$t = htmlspecialchars($acquisition[$i], ENT_QUOTES);
 			$atype = htmlspecialchars($acqtype[$i], ENT_QUOTES);
-			fwrite($out, "<link rel=\"$atype\" href=\"$t\" type=\"application/epub+zip\" />\n");
-			$p = htmlspecialchars($price[$i], ENT_QUOTES);
-			$c = htmlspecialchars($curcode[$i], ENT_QUOTES);
-			if($p)
+			$m = htmlspecialchars($mime[$i], ENT_QUOTES);
+			if(strstr($atype, 'buy') || strstr($atype, 'subscribe') || strstr($atype, 'sample')) {
+				fwrite($out, "<link rel=\"$atype\" href=\"$t\" type=\"$m\" >\n");	
+				$p = htmlspecialchars($price[$i], ENT_QUOTES);
+				$c = htmlspecialchars($curcode[$i], ENT_QUOTES);
 				fwrite($out, "<opds:price currencycode=\"$c\">$p</opds:price>\n");
+				fwrite($out, "</link>\n");
+			}
+			else
+				fwrite($out, "<link rel=\"$atype\" href=\"$t\" type=\"application/epub+zip\" />\n");
 			fwrite($out, "</entry>\n");
 			$i++;
 		}
@@ -207,31 +245,33 @@ print "</table>\n";
 print "<h2>Entries data</h2>\n";
 print "<table class=\"formtbl\" border=\"1\" width=\"100%\">\n";
 $c = 0;
+$e = 0;
 foreach($xml->entry as $entry) {
 	if($c == 0)
 		print "<tr><td valign=\"top\">\n";
 	else
 		print "<td valign=\"top\">\n";
+	$e++;
 //	print_r($entry);
 	print "<table >\n";
 	$entrytitle = $entry->title;
 	$entryid = $entry->id;
 	print "<tr>\n";
 	print "<td>Title: &nbsp;</td>\n";
-	print "<td><input type=\"text\" class=\"input-medium\" name=\"entrytitle[]\" value=\"$entrytitle\"></td>\n";
+	print "<td><input type=\"text\" class=\"input-medium\" style=\"height:1em\" name=\"entrytitle[]\" value=\"$entrytitle\"></td>\n";
 	print "</tr><tr>\n";
 	print "<td>Id: </td>\n";
-	print "<td><input type=\"text\" class=\"input-medium\" name=\"entryid[]\" value=\"$entryid\"></td>\n";
+	print "<td><input type=\"text\" class=\"input-medium\" style=\"height:1em\" name=\"entryid[]\" value=\"$entryid\"></td>\n";
 	print "</tr><tr>\n";
 	$entryauthor = $entry->author->name;
 	print "<td>Author: </td>\n";
-	print "<td><input type=\"text\" class=\"input-medium\" name=\"entryauthor[]\" value=\"$entryauthor\"></td>\n";
+	print "<td><input type=\"text\" class=\"input-medium\" style=\"height:1em\" name=\"entryauthor[]\" value=\"$entryauthor\"></td>\n";
 	print "</tr><tr>\n";
 	$entrylang = $entry->{'dclanguage'};
 /*	if($entrylang == '')
 		$entrylang = $deflang; */
 	print "<td>language: &nbsp;</td>\n";
-	print "<td><input type=\"text\" class=\"input-small\" name=\"entrylang[]\" value=\"$entrylang\"></td>\n";
+	print "<td><input type=\"text\" class=\"input-small\" style=\"height:1em\" name=\"entrylang[]\" value=\"$entrylang\"></td>\n";
 	print "</tr><tr>\n";
 
 	/* I am sure there is a simpler more efficient way but I am not familiar enough with PHP objects */
@@ -245,25 +285,33 @@ foreach($xml->entry as $entry) {
 			$acquisition = $at['href'];
 			$acqtype = $at['rel'];
 		}
+		$mime = $at['type'];
 	}
 	print "<td colspan=\"2\"><img src=\"$imgprefix/$entryimg\" alt=\"Entry image\" width=\"200px\" /><br />\n";
-	print "<input type=\"text\" class=\"input-medium\" name=\"entryimg[]\" value=\"$entryimg\"></td>\n";
+	print "<input type=\"text\" class=\"input-medium\" style=\"height:1em\" name=\"entryimg[]\" value=\"$entryimg\"></td>\n";
 	print "</tr><tr>\n";
 	print "<td colspan=\"2\">\n";
 	print "Acquisition link: <br />\n";
-	print "<input type=\"text\" class=\"input-medium\" name=\"acquisition[]\" value=\"$acquisition\"></td>\n";
+	print "<input type=\"text\" class=\"input-medium\" style=\"height:1em\" name=\"acquisition1[]\" value=\"$acquisition\"></td>\n";
 	print "</tr><tr>\n";
+	print "<td>File type: </td><td>\n";
+	PrintMimeSelect($mime, 1);
+	print "</td></tr><tr>\n";
+
 	print "<td>Type: </td><td>\n";
-	PrintAcquisitionTypeSelect($acqtype);
+	PrintAcquisitionTypeSelect($acqtype, 1, $e);
 	print "</td></tr><tr>\n";
 	
+	print "<td colspan=\"2\">\n";
+	print "<div id=\"pr1$e\" style=\"display:none\">\n";
 	$price = $entry->{'opdsprice'};
 	$curcode = $price->attributes();
 //	print_r($curcode);
-	print "<td>Price: </td><td><input type=\"text\" class=\"input-small\" name=\"price[]\" value=\"$price\"></td>\n";
-	print "</tr><tr>\n";
-	print "<td>Curr. code: </td><td><input type=\"text\" class=\"input-small\" name=\"curcode[]\" value=\"$curcode\"></td>\n";
-	print "</tr><tr>\n";
+	print "Price: &nbsp;<input type=\"text\" class=\"input-mini\" style=\"height:1em;width:3em\" name=\"price1[]\" value=\"$price\">\n";
+	print "Curr. code: <input type=\"text\" class=\"input-mini\" style=\"height:1em;width:3em\" name=\"curcode1[]\" value=\"$curcode\">\n";
+	print "</div>\n";
+	
+	print "</td></tr><tr>\n";
 
 	$summary = $entry->summary;
 	print "<td colspan=\"2\">Summary:<br />\n";
